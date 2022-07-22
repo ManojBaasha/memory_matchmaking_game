@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <ctime>
 using namespace std;
 
 class MemoryMatchGame
@@ -13,20 +14,20 @@ public:
     int level_play();
     int speed_play();
     int theme_play();
+    int seconds;
     std::string filename;
     int theme;
     int grid;
     int level;
 };
 
-class Board
+class Board : public MemoryMatchGame
 {
 public:
     Board(string filename, int level, int grid);
     std::vector<std::vector<std::string>> answerboard;
     std::vector<std::vector<std::string>> displayboard;
     std::vector<std::string> words;
-    
 
     void printdisplay();
     void printanswer();
@@ -57,6 +58,18 @@ int MemoryMatchGame::speed_play()
     int speed;
     std::cout << "Choose a speed:\n1)6 Seconds (Easy)\n2) 4 Seconds (Medium)\n3) 2 Seconds (Hard) " << std::endl;
     std::cin >> speed;
+    if (speed == 1)
+    {
+        seconds = 6;
+    }
+    else if (speed == 2)
+    {
+        seconds = 4;
+    }
+    else if (speed == 3)
+    {
+        seconds = 2;
+    }
     return speed;
 }
 
@@ -76,8 +89,10 @@ void Board::printanswer()
 void Board::printdisplay()
 {
     // print the display board
-    for(int i = 0; i < displayboard.size(); i++){
-        for(int j = 0; j < displayboard[i].size(); j++){
+    for (int i = 0; i < displayboard.size(); i++)
+    {
+        for (int j = 0; j < displayboard[i].size(); j++)
+        {
             std::cout << displayboard[i][j] << " ";
         }
         std::cout << std::endl;
@@ -90,8 +105,13 @@ Board::Board(string filename, int level, int grid)
     // read file
     std::ifstream file(filename + ".txt");
     std::string line;
-    while (std::getline(file, line))
+
+    for (int i = 0; i < (grid * grid) / 2; i++)
     {
+        std::getline(file, line);
+        // randomly choose a word from the file
+        int random = rand() % (grid * grid) / 2;
+        words.push_back(line);
         words.push_back(line);
     }
 
@@ -103,7 +123,7 @@ Board::Board(string filename, int level, int grid)
         std::vector<std::string> row;
         for (int j = 0; j < grid; j++)
         {
-            row.push_back(filename +" ");
+            row.push_back(filename + "-" + to_string(i) + to_string(j));
         }
         displayboard.push_back(row);
     }
@@ -123,30 +143,36 @@ Board::Board(string filename, int level, int grid)
     cout << endl;
 };
 
-int MemoryMatchGame::theme_play(){
+int MemoryMatchGame::theme_play()
+{
     std::cout << "Choose a theme: \n1) Animals\n2) Sports\n3) Food" << std::endl;
     std::cin >> theme;
     if (theme == 1)
     {
-        filename = "ANIMALS";
+        filename = "ANIMAL";
     }
     return theme;
 }
 
 MemoryMatchGame::MemoryMatchGame()
 {
-    
+}
+
+void MemoryMatchGame::start()
+{
     int theme = theme_play();
     int level = level_play();
     int speed = speed_play();
+    srand(time(NULL));
 
     Board Board(filename, level, grid);
     Board.printdisplay();
     Board.printanswer();
+    
 }
 
 int main()
 {
     MemoryMatchGame Game1; // first line - declare instance of game
-    // Game1.start();         // second line - start game
+    Game1.start();         // second line - start game
 }
