@@ -4,6 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include <ctime>
+#include <chrono>
+#include <thread>
 using namespace std;
 
 class MemoryMatchGame
@@ -19,6 +21,8 @@ public:
     int theme;
     int grid;
     int level;
+
+    void pause_game(); 
 };
 
 class Board : public MemoryMatchGame
@@ -31,7 +35,83 @@ public:
 
     void printdisplay();
     void printanswer();
+
+    int display_board_row();
+    int answer_board_row(); 
+    int display_board_col();
+    int answer_board_col();
+
+    string get_piece_answer(int row, int col);
+    string get_piece_display(int row, int col);
+
+    void place_piece_display(int row, int col, string piece);
+
+    bool check_if_won();
 };
+
+bool Board::check_if_won()
+{
+    int count = 0;
+    for (int i = 0; i < answer_board_row(); i++)
+    {
+        for (int j = 0; j < answer_board_col(); j++)
+        {
+            if (get_piece_answer(i, j) == get_piece_display(i, j))
+            {
+                count++;
+            }
+        }
+    }
+    if (count == answer_board_row() * answer_board_col())
+    {
+        cout << "You won!" << endl;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int Board::display_board_row()
+{
+    return displayboard.size();
+}
+
+int Board::answer_board_row()
+{
+    return answerboard.size();
+} 
+
+int Board::display_board_col()
+{
+    return displayboard[0].size();
+}
+
+int Board::answer_board_col()
+{
+    return answerboard[0].size();
+}
+
+string Board::get_piece_answer(int row, int col)
+{
+    return answerboard[row][col];
+}
+
+string Board::get_piece_display(int row, int col)
+{
+    return displayboard[row][col];
+}
+
+void Board::place_piece_display(int row, int col, string piece)
+{
+    displayboard[row][col] = piece;
+}
+
+void MemoryMatchGame::pause_game()
+{
+    this_thread::sleep_for(std::chrono::seconds(seconds));
+}
 
 int MemoryMatchGame::level_play()
 {
@@ -166,8 +246,60 @@ void MemoryMatchGame::start()
     srand(time(NULL));
 
     Board Board(filename, level, grid);
-    Board.printdisplay();
-    Board.printanswer();
+
+    cout << "Welcome to Memory Match!" << endl;
+
+    while (true)
+    {      
+        Board.printdisplay();
+        Board.printanswer();
+        int row1;
+        int col1;
+        int row2;
+        int col2;
+        cout << "Enter a row of first card" << endl;
+        cin >> row1;
+        cout << "Enter a column of first card" << endl;
+        cin >> col1;
+
+        string themecard1 = Board.get_piece_display(row1, col1);
+        string answercard = Board.get_piece_answer(row1, col1);
+
+        Board.place_piece_display(row1, col1, answercard);
+        Board.printdisplay();
+
+        cout << "Enter a row of second card" << endl;
+        cin >> row2;
+        cout << "Enter a column of second card" << endl;
+        cin >> col2;
+
+        string themecard2 = Board.get_piece_display(row2, col2);
+        string answercard2 = Board.get_piece_answer(row2, col2);
+
+        Board.place_piece_display(row2, col2, answercard2);
+        Board.printdisplay();
+
+        if (answercard == answercard2)
+        {
+            
+            system("CLS");
+            cout << "You found a match!" << endl;
+        }
+        else
+        {
+            cout << "Sorry, no match!" << endl;
+            pause_game();
+            system("CLS");
+            Board.place_piece_display(row1, col1, themecard1);
+            Board.place_piece_display(row2, col2, themecard2);            
+        }
+        if(Board.check_if_won())
+        {
+            break;
+        }
+    }
+    
+
     
 }
 
