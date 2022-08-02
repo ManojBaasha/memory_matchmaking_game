@@ -21,8 +21,14 @@ public:
     int theme;
     int grid;
     int level;
+    int row1;
+    int col1;
+    int row2;
+    int col2;
 
-    void pause_game(); 
+    void pause_game();
+    void input_row_col();
+    void input_row_col2();
 };
 
 class Board : public MemoryMatchGame
@@ -37,7 +43,7 @@ public:
     void printanswer();
 
     int display_board_row();
-    int answer_board_row(); 
+    int answer_board_row();
     int display_board_col();
     int answer_board_col();
 
@@ -48,6 +54,29 @@ public:
 
     bool check_if_won();
 };
+
+void MemoryMatchGame::input_row_col()
+{
+    std::cout << "Enter the row and col of card you want to pick" << endl;
+
+    std::cin >> row1 >> col1;
+    if (row1 < 0 or row1 > grid - 1 or col1 < 0 or col1 > grid - 1)
+    {
+        input_row_col();
+    }
+}
+
+void MemoryMatchGame::input_row_col2()
+{
+    std::cout << "Enter the row and col of card you want to pick" << endl;
+
+    std::cin >> row2 >> col2;
+    if (row2 < 0 or row2 > grid - 1 or col2 < 0 or col2 > grid - 1)
+    {
+        std::cout << "that isnt one of the cards bruh" << endl;
+        input_row_col();
+    }
+}
 
 bool Board::check_if_won()
 {
@@ -81,7 +110,7 @@ int Board::display_board_row()
 int Board::answer_board_row()
 {
     return answerboard.size();
-} 
+}
 
 int Board::display_board_col()
 {
@@ -156,7 +185,8 @@ int MemoryMatchGame::speed_play()
 void Board::printanswer()
 {
     cout << "   ";
-    for(int i = 0; i < answer_board_col();i++){
+    for (int i = 0; i < answer_board_col(); i++)
+    {
         cout << i << "        ";
     }
     std::cout << std::endl;
@@ -170,13 +200,13 @@ void Board::printanswer()
         }
         std::cout << std::endl;
     }
-    
 }
 
 void Board::printdisplay()
 {
     cout << "   ";
-    for(int i = 0; i < answer_board_col();i++){
+    for (int i = 0; i < answer_board_col(); i++)
+    {
         cout << i << "          ";
     }
     std::cout << std::endl;
@@ -263,17 +293,11 @@ void MemoryMatchGame::start()
     cout << "Welcome to Memory Match!" << endl;
 
     while (true)
-    {      
+    {
         Board.printdisplay();
         Board.printanswer();
-        int row1;
-        int col1;
-        int row2;
-        int col2;
-        cout << "Enter a row of first card" << endl;
-        cin >> row1;
-        cout << "Enter a column of first card" << endl;
-        cin >> col1;
+
+        input_row_col();
 
         string themecard1 = Board.get_piece_display(row1, col1);
         string answercard = Board.get_piece_answer(row1, col1);
@@ -281,10 +305,7 @@ void MemoryMatchGame::start()
         Board.place_piece_display(row1, col1, answercard);
         Board.printdisplay();
 
-        cout << "Enter a row of second card" << endl;
-        cin >> row2;
-        cout << "Enter a column of second card" << endl;
-        cin >> col2;
+        input_row_col2();
 
         string themecard2 = Board.get_piece_display(row2, col2);
         string answercard2 = Board.get_piece_answer(row2, col2);
@@ -294,7 +315,7 @@ void MemoryMatchGame::start()
 
         if (answercard == answercard2)
         {
-            
+
             system("CLS");
             cout << "You found a match!" << endl;
         }
@@ -304,9 +325,9 @@ void MemoryMatchGame::start()
             pause_game();
             system("CLS");
             Board.place_piece_display(row1, col1, themecard1);
-            Board.place_piece_display(row2, col2, themecard2);            
+            Board.place_piece_display(row2, col2, themecard2);
         }
-        if(Board.check_if_won())
+        if (Board.check_if_won())
         {
             break;
         }
