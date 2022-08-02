@@ -155,22 +155,35 @@ int MemoryMatchGame::speed_play()
 
 void Board::printanswer()
 {
+    cout << "   ";
+    for(int i = 0; i < answer_board_col();i++){
+        cout << i << "        ";
+    }
+    std::cout << std::endl;
     // print the answer board
     for (int i = 0; i < answerboard.size(); i++)
     {
+        cout << i << " ";
         for (int j = 0; j < answerboard[i].size(); j++)
         {
             std::cout << answerboard[i][j] << " ";
         }
         std::cout << std::endl;
     }
+    
 }
 
 void Board::printdisplay()
 {
+    cout << "   ";
+    for(int i = 0; i < answer_board_col();i++){
+        cout << i << "          ";
+    }
+    std::cout << std::endl;
     // print the display board
     for (int i = 0; i < displayboard.size(); i++)
     {
+        cout << i << " ";
         for (int j = 0; j < displayboard[i].size(); j++)
         {
             std::cout << displayboard[i][j] << " ";
@@ -298,9 +311,6 @@ void MemoryMatchGame::start()
             break;
         }
     }
-    
-
-    
 }
 
 int main()
