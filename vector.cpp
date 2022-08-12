@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 
+//Example code to show how to use the vector class
 
 int main(){
     //2d array of words

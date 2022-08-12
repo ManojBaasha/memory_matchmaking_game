@@ -3,6 +3,8 @@ using namespace std;
 #include <chrono>
 #include <thread>
 
+//Example code to show how to use time library
+
 int main()
 {
     system("CLS");
